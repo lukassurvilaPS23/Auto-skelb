@@ -23,7 +23,9 @@ class RenginioRegistracija extends Model
     }
 
     public function vartotojas()
-    {
-        return $this->belongsTo(User::class, 'vartotojas_id');
-    }
+{
+    return $this->belongsTo(\App\Models\User::class, 'vartotojas_id');
+}
+
+
 }

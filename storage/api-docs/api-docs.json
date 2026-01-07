@@ -343,9 +343,17 @@
                                         "type": "string",
                                         "example": "Atnaujintas pavadinimas"
                                     },
+                                    "aprasymas": {
+                                        "type": "string",
+                                        "example": "Atnaujintas aprašymas"
+                                    },
                                     "miestas": {
                                         "type": "string",
                                         "example": "Kaunas"
+                                    },
+                                    "adresas": {
+                                        "type": "string",
+                                        "example": "Naujas adresas"
                                     },
                                     "statusas": {
                                         "type": "string",
@@ -409,6 +417,45 @@
                     },
                     "404": {
                         "description": "Nerasta"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auto-renginiai/{autoRenginys}/registracijos": {
+            "get": {
+                "tags": [
+                    "Auto renginiai"
+                ],
+                "summary": "Peržiūrėti registracijas į konkretų renginį (organizatorius arba administratorius)",
+                "operationId": "ab8800f3288d3d8afb676b7d622c6736",
+                "parameters": [
+                    {
+                        "name": "autoRenginys",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Neprisijungęs"
+                    },
+                    "403": {
+                        "description": "Neturi teisių"
+                    },
+                    "404": {
+                        "description": "Renginys nerastas"
                     }
                 },
                 "security": [
@@ -523,12 +570,12 @@
             "description": "Registracija, prisijungimas, profilis ir atsijungimas"
         },
         {
-            "name": "Auto renginiai",
-            "description": "Auto renginių CRUD ir XML eksportas"
-        },
-        {
             "name": "Registracijos",
             "description": "Registracija į auto renginius ir registracijos atšaukimas"
+        },
+        {
+            "name": "Auto renginiai",
+            "description": "Auto renginiai"
         }
     ]
 }

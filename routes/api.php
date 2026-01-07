@@ -16,6 +16,7 @@ Route::post('/registruotis', [AutentifikacijaController::class, 'registruotis'])
 Route::post('/prisijungti', [AutentifikacijaController::class, 'prisijungti']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/auto-renginiai/{autoRenginys}/registracijos', [\App\Http\Controllers\AutoRenginiaiController::class, 'registracijos']);
     Route::post('/atsijungti', [AutentifikacijaController::class, 'atsijungti']);
     Route::get('/as', [AutentifikacijaController::class, 'as']);
 });

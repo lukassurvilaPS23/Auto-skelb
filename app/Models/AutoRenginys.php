@@ -33,8 +33,8 @@ class AutoRenginys extends Model
     }
 
     public function registracijos()
-    {
-        return $this->hasMany(RenginioRegistracija::class, 'auto_renginys_id');
-    }
+{
+    return $this->hasMany(\App\Models\RenginioRegistracija::class, 'auto_renginys_id');
+}
 
 }
