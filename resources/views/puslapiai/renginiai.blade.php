@@ -19,7 +19,7 @@
     </div>
 </div>
 
-<div id="out" class="card">Kraunama...</div>
+<div id="out" class="card" style="min-height:120px;">Kraunama...</div>
 
 <script>
 (async () => {
@@ -43,12 +43,18 @@
     const list = payload.auto_renginiai || [];
     if (list.length === 0) { out.textContent = 'Renginių nėra.'; return; }
 
-    out.innerHTML = '<ul>' + list.map(r => `
-      <li>
-        <a href="/renginiai/${r.id}">${r.pavadinimas}</a>
-        — ${r.miestas} — ${r.pradzios_data}
-      </li>
-    `).join('') + '</ul>';
+    out.innerHTML = list.map(r => `
+      <div style="padding:14px 0; border-bottom:1px solid #eee;">
+        <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+          <div>
+            <a href="/renginiai/${r.id}" style="font-size:18px; font-weight:600; color:#111827;">${r.pavadinimas}</a>
+            <p class="muted" style="margin:4px 0 0;">${r.miestas ?? '—'} · ${Api.formatDate(r.pradzios_data)}</p>
+          </div>
+          <span style="align-self:flex-start; background:#eef2ff; color:#312e81; padding:4px 12px; border-radius:999px; font-size:13px;">${r.statusas ?? '—'}</span>
+        </div>
+        <p style="margin:8px 0 0; color:#374151;">${r.aprasymas ?? ''}</p>
+      </div>
+    `).join('');
   }
 
   document.getElementById('filtruotiBtn').addEventListener('click', load);

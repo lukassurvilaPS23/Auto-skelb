@@ -19,9 +19,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auto-renginiai/{autoRenginys}/registracijos', [\App\Http\Controllers\AutoRenginiaiController::class, 'registracijos']);
     Route::post('/atsijungti', [AutentifikacijaController::class, 'atsijungti']);
     Route::get('/as', [AutentifikacijaController::class, 'as']);
+
 });
 
-// Auto renginiai (SVARBU: export.xml turi būti prieš {autoRenginys})
+// Auto renginiai
 Route::get('/auto-renginiai/export.xml', [AutoRenginiaiController::class, 'exportXml']);
 
 Route::get('/auto-renginiai', [AutoRenginiaiController::class, 'index']);

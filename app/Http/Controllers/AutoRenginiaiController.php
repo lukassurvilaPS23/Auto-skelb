@@ -35,6 +35,8 @@ class AutoRenginiaiController extends Controller
 
         if ($request->filled('statusas')) {
             $q->where('statusas', $request->query('statusas'));
+        } else {
+            $q->where('statusas', 'aktyvus');
         }
 
         return response()->json([
@@ -155,6 +157,8 @@ class AutoRenginiaiController extends Controller
         $data = $request->validate([
             'pavadinimas' => 'sometimes|string|max:255',
             'aprasymas' => 'sometimes|nullable|string',
+            'pradzios_data' => 'sometimes|date',
+            'pabaigos_data' => 'sometimes|nullable|date',
             'miestas' => 'sometimes|string|max:255',
             'adresas' => 'sometimes|nullable|string|max:255',
             'statusas' => 'sometimes|string|max:50',

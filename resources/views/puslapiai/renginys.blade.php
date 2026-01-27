@@ -26,21 +26,31 @@ const id = {{ $id }};
     <p>${r.aprasymas ?? ''}</p>
     <p><b>Miestas:</b> ${r.miestas}</p>
     <p><b>Adresas:</b> ${r.adresas ?? ''}</p>
-    <p><b>Pradžia:</b> ${r.pradzios_data}</p>
-    <p><b>Pabaiga:</b> ${r.pabaigos_data ?? ''}</p>
+    <p><b>Pradžia:</b> ${Api.formatDate(r.pradzios_data)}</p>
+    <p><b>Pabaiga:</b> ${Api.formatDate(r.pabaigos_data)}</p>
     <p><b>Statusas:</b> ${r.statusas}</p>
   `;
 })();
 
 document.getElementById('regBtn').addEventListener('click', async () => {
+  if (!Api.getToken()) {
+    alert('Prisijunk, kad galėtum registruotis.');
+    window.location.href = '/prisijungti';
+    return;
+  }
   const { ok, status, payload } = await Api.request('POST', `/api/auto-renginiai/${id}/registracija`);
-  if (!ok) { alert(`Klaida ${status}: ` + (payload.zinute ?? payload.message ?? 'Nepavyko')); return; }
+  if (!ok) { alert(`Klaida ${status}: ` + Api.errorMessage(payload)); return; }
   alert(payload.zinute ?? 'Registracija sėkminga');
 });
 
 document.getElementById('atsisBtn').addEventListener('click', async () => {
+  if (!Api.getToken()) {
+    alert('Prisijunk, kad galėtum atšaukti registraciją.');
+    window.location.href = '/prisijungti';
+    return;
+  }
   const { ok, status, payload } = await Api.request('DELETE', `/api/auto-renginiai/${id}/registracija`);
-  if (!ok) { alert(`Klaida ${status}: ` + (payload.zinute ?? payload.message ?? 'Nepavyko')); return; }
+  if (!ok) { alert(`Klaida ${status}: ` + Api.errorMessage(payload)); return; }
   alert(payload.zinute ?? 'Registracija atšaukta');
 });
 </script>

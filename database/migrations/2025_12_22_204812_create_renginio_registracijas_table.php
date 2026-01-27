@@ -23,7 +23,6 @@ return new class extends Migration
 
             $table->timestamps();
 
-            // kad tas pats vartotojas negalėtų registruotis kelis kartus į tą patį renginį
             $table->unique(['auto_renginys_id', 'vartotojas_id']);
         });
     }

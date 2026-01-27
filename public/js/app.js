@@ -9,10 +9,23 @@ window.Api = {
     localStorage.removeItem("token");
   },
 
+  errorMessage(payload) {
+    if (!payload) return 'Nepavyko';
+    if (typeof payload === 'string') return payload;
+    return payload.zinute ?? payload.message ?? 'Nepavyko';
+  },
+
+  formatDate(value) {
+    if (!value) return '';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value;
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  },
+
   async request(method, url, data = null) {
     const headers = { "Accept": "application/json" };
 
-    // jei siunčiam JSON body
     if (data !== null) headers["Content-Type"] = "application/json";
 
     const token = this.getToken();
@@ -28,6 +41,11 @@ window.Api = {
     const payload = ct.includes("application/json")
       ? await res.json().catch(() => ({}))
       : await res.text().catch(() => "");
+
+    if (res.status === 401) {
+      this.clearToken();
+      if (window.UI?.setAuthNav) window.UI.setAuthNav(false);
+    }
 
     return { ok: res.ok, status: res.status, payload };
   }
@@ -62,7 +80,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("atsijungtiBtn");
   if (btn) {
     btn.addEventListener("click", async () => {
-      // bandome atsijungti, bet net jei nepavyksta – valom tokeną
       await Api.request("POST", "/api/atsijungti");
       Api.clearToken();
       UI.setAuthNav(false);

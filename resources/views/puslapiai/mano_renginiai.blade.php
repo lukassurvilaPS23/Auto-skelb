@@ -126,7 +126,7 @@
             <tr>
               <td style="border-bottom:1px solid #eee; padding:8px;">${x.vartotojas?.vardas ?? '-'}</td>
               <td style="border-bottom:1px solid #eee; padding:8px;">${x.vartotojas?.el_pastas ?? '-'}</td>
-              <td style="border-bottom:1px solid #eee; padding:8px;">${x.sukurta ?? ''}</td>
+              <td style="border-bottom:1px solid #eee; padding:8px;">${Api.formatDate(x.sukurta)}</td>
             </tr>
           `).join('')}
         </tbody>
@@ -146,7 +146,6 @@
     const me = await Api.request('GET', '/api/as');
     if (!me.ok) { list.textContent = 'Prisijunk, kad matytum šį puslapį.'; return; }
 
-    // pagal tavo API gali būti: { vartotojas: {...} } arba tiesiog { id: ... }
     const myId = me.payload.vartotojas?.id ?? me.payload.id ?? null;
 
     const res = await Api.request('GET', '/api/auto-renginiai');
@@ -154,18 +153,17 @@
 
     const all = res.payload.auto_renginiai || [];
 
-    // ✅ PATAISYTA: Number() kad suveiktų ir kai string/int nesutampa
     const mine = myId ? all.filter(r => Number(r.organizatorius_id) === Number(myId)) : [];
 
     if (mine.length === 0) {
-      list.innerHTML = '<p>Neturi sukurtų renginių arba jie dar nesukurti.</p>';
+      list.innerHTML = '<p>Neturi sukurtų renginių.</p>';
       return;
     }
 
     list.innerHTML = '<h3>Mano sukurti renginiai</h3>' + mine.map(r => `
       <div class="card">
-        <b>${r.pavadinimas}</b> — ${r.miestas} — ${r.pradzios_data}<br>
-        <span class="muted">ID: ${r.id}</span>
+        <b>${r.pavadinimas}</b> — ${r.miestas} — ${Api.formatDate(r.pradzios_data)}<br>
+        <span class="muted">Pabaiga: ${Api.formatDate(r.pabaigos_data) || 'Nenurodyta'} | ID: ${r.id}</span>
         <div class="row" style="margin-top:10px;">
           <button class="btn" data-edit="${r.id}" type="button">Redaguoti</button>
           <button class="btn" data-del="${r.id}" type="button">Trinti</button>
@@ -229,6 +227,8 @@
         pavadinimas: data.pavadinimas,
         miestas: data.miestas,
         aprasymas: data.aprasymas,
+        pradzios_data: data.pradzios_data,
+        pabaigos_data: data.pabaigos_data,
         adresas: data.adresas
       });
     } else {
@@ -236,7 +236,7 @@
     }
 
     if (!res.ok) {
-      alert(`Klaida ${res.status}: ` + (res.payload.zinute ?? res.payload.message ?? JSON.stringify(res.payload)));
+      alert(`Klaida ${res.status}: ` + Api.errorMessage(res.payload));
       return;
     }
 

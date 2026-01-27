@@ -58,7 +58,6 @@ class AutentifikacijaController extends Controller
             'password' => Hash::make($data['slaptazodis']),
         ]);
 
-        // Reikia, kad roles būtų suseedintos:
         $user->assignRole('vartotojas');
 
         $token = $user->createToken('api')->plainTextToken;
@@ -156,8 +155,11 @@ class AutentifikacijaController extends Controller
 
     public function as(Request $request)
     {
+        $user = $request->user()->loadMissing('roles:id,name');
+
         return response()->json([
-            'vartotojas' => $request->user(),
+            'vartotojas' => $user,
+            'roles' => $user->roles->pluck('name'),
         ], 200);
     }
 }

@@ -13,7 +13,6 @@ class AutentifikacijaApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        // reikalinga, kad assignRole('vartotojas') neskristų
         $this->seed(RolesSeeder::class);
     }
 
@@ -38,14 +37,12 @@ class AutentifikacijaApiTest extends TestCase
 
     public function test_vartotojas_gali_prisijungti_ir_gauti_token(): void
     {
-        // pirmiau registruojam
         $this->postJson('/api/registruotis', [
             'vardas' => 'Testas',
             'el_pastas' => 'testas@auto.lt',
             'slaptazodis' => 'slaptazodis',
         ])->assertStatus(201);
 
-        // tada prisijungiam
         $response = $this->postJson('/api/prisijungti', [
             'el_pastas' => 'testas@auto.lt',
             'slaptazodis' => 'slaptazodis',
